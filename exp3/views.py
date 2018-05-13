@@ -176,3 +176,17 @@ def deleteEditDiary(request, user_id, diary_id):
     diary = get_object_or_404(Diary, pk=diary_id)
     diary.delete()
     return HttpResponseRedirect(reverse('exp3:diaryList', args=(user_id,)))
+
+class NewDiaryView(generic.DetailView):
+    model = User
+    template_name = 'exp3/newDiary.html'
+
+def pushNewDiary(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    diary = user.diary_set.create(
+        author=user,
+        title=request.POST['title'],
+        content=request.POST['content'],
+        date=timezone.now()
+    )
+    return render(request, 'exp3/diary.html', {'diary': diary, 'user' : user })

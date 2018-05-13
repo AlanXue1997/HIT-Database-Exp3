@@ -24,6 +24,8 @@ urlpatterns = [
 
     # Diary
     path('<int:pk>/diaryList', views.DiarysListView.as_view(), name='diaryList'),
+    path('<int:pk>/newDiary', views.NewDiaryView.as_view(), name='newDiary'),
+    path('<int:user_id>/newDiary/push', views.pushNewDiary, name='pushNewDiary'),
     path('<int:user_id>/diary/<int:diary_id>/', views.diarypage, name='diary'),
     path('<int:user_id>/editDiary/<int:diary_id>/', views.editDiary, name='editDiary'),
     path('<int:user_id>/editDiary/<int:diary_id>/push', views.pushEditDiary, name='pushEditDiary'),

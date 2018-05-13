@@ -25,3 +25,35 @@ class User(models.Model):
 
     def __str__(self):
         return self.email
+
+class Education(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    PRIMATY = 'P'
+    JUNIOR_HIGH = 'J'
+    SENIOR_HIGT = 'S'
+    UNDERGRADUATE = 'U'
+    GRADUATE = 'G'
+    LEVEL = (
+        (PRIMATY, '小学'),
+        (JUNIOR_HIGH, '初中'),
+        (SENIOR_HIGT, '高中'),
+        (UNDERGRADUATE, '本科'),
+        (GRADUATE, '硕士'),
+    )
+    level = models.CharField(
+        max_length = 1,
+        choices=LEVEL,
+    )
+    begin = models.DateField('Begin Date')
+    end = models.DateField('End Date')
+    school = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.school
+
+class  Work(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    company = models.CharField(max_length=200)
+    begin = models.DateField('Begin Date')
+    end = models.DateField('End Date')
+    position = models.CharField(max_length=200)

@@ -51,9 +51,15 @@ class Education(models.Model):
     def __str__(self):
         return self.school
 
-class  Work(models.Model):
+class Work(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     company = models.CharField(max_length=200)
     begin = models.DateField('Begin Date')
     end = models.DateField('End Date')
     position = models.CharField(max_length=200)
+
+class Diary(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    date = models.DateField('Update date')

@@ -6,7 +6,7 @@ from django import forms
 from django.urls import reverse
 from django.views import generic
 
-from .models import User, Education
+from .models import User, Education, Work
 
 class IndexView(generic.DetailView):
     model = User
@@ -16,9 +16,41 @@ class EducationView(generic.DetailView):
     model = User
     template_name = 'exp3/education.html'
 
+class WorkView(generic.DetailView):
+    model = User
+    template_name = 'exp3/work.html'
+
 class UserForm(forms.Form):
     email = forms.CharField(label='邮箱')
     password = forms.CharField(label='密码',widget=forms.PasswordInput())
+
+def newWorkInfo(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    user.work_set.create(
+        company=request.POST['company'],
+        position=request.POST['position'],
+        begin=request.POST['begin'],
+        end=request.POST['end']
+    )
+    return HttpResponseRedirect(reverse('exp3:work', args=(user.id,)))
+
+def deleteWorkInfo(request, work_id):
+    work = get_object_or_404(Work, pk=work_id)
+    work.delete()
+    return HttpResponseRedirect(reverse('exp3:work', args=(work.user.id,)))
+
+def changeWorkInfo(request, work_id):
+    work = get_object_or_404(Work, pk=work_id)
+    try:
+        work.company = request.POST['company']
+        work.position = request.POST['position']
+        work.begin = request.POST['begin']
+        work.end = request.POST['end']
+        work.save()
+    except:
+        return HttpResponseRedirect(reverse('exp3:work', args=(work.user.id,)))
+    else:
+        return HttpResponseRedirect(reverse('exp3:work', args=(work.user.id,)))
 
 def newEducationInfo(request, user_id):
     user = get_object_or_404(User, pk=user_id)

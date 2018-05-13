@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 
 <head>
 
@@ -43,7 +43,7 @@
                     <a class="nav-link" href="index.html">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="about.html">About</a>
+                    <a class="nav-link" href="{% url 'exp3:work' user.id %}">工作经历</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'exp3:education' user.id %}">教育经历</a>

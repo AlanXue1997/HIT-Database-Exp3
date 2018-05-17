@@ -1,3 +1,5 @@
+import sqlparse
+
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
@@ -6,6 +8,8 @@ from django import forms
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.db.models import Q
+# from django.db import connection
 
 from .models import User, Education, Work, Diary
 
@@ -13,23 +17,26 @@ from .models import User, Education, Work, Diary
 # Login
 # ------------------------------
 
+
 class IndexView(generic.DetailView):
     model = User
     template_name = 'exp3/index.html'
 
+
 class UserForm(forms.Form):
     email = forms.CharField(label='邮箱')
-    password = forms.CharField(label='密码',widget=forms.PasswordInput())
+    password = forms.CharField(label='密码', widget=forms.PasswordInput())
+
 
 def login(request):
     if request.method == 'POST':
-        ##获取表单信息
+        # 获取表单信息
         uf = UserForm(request.POST)
         if uf.is_valid():
             email = uf.cleaned_data['email']
             password = uf.cleaned_data['password']
 
-            ##判断用户密码是否匹配
+            # 判断用户密码是否匹配
             try:
                 user = User.objects.get(email=email)
             except(KeyError, User.DoesNotExist):
@@ -145,9 +152,11 @@ def changeInfo(request, user_id):
 # About diary
 # ------------------------------
 
-class DiarysListView(generic.DetailView):
-    model = User
-    template_name = 'exp3/diaryList.html'
+def diaryList(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    diarys = Diary.objects.filter(Q(author__in=user.follow.all()) | Q(author__exact=user)).order_by('-date')
+    stat = sqlparse.format(str(diarys.query).replace('`', ''), reindent=True, keyword_case='upper')
+    return render(request, 'exp3/diaryList.html', {'diarys' : diarys, 'user' : user, 'stat' : stat})
 
 def diarypage(request, user_id, diary_id):
     diary = get_object_or_404(Diary, pk=diary_id)
@@ -190,3 +199,18 @@ def pushNewDiary(request, user_id):
         date=timezone.now()
     )
     return render(request, 'exp3/diary.html', {'diary': diary, 'user' : user })
+
+# ------------------------------
+# About diary
+# ------------------------------
+
+class FollowView(generic.DetailView):
+    model = User
+    template_name = "exp3/follow.html"
+
+def unfollow(request, user_id, u_id):
+    user = get_object_or_404(User, pk=user_id)
+    u = get_object_or_404(User, pk=u_id)
+    user.follow.remove(u)
+    return render(request, 'exp3/follow.html', {'user' : user})
+

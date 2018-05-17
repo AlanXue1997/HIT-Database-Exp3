@@ -22,6 +22,7 @@ class User(models.Model):
     )
     birth = models.DateField('Birthday')
     address = models.CharField(max_length=200)
+    follow = models.ManyToManyField('self', symmetrical=False, blank=True)
 
     def __str__(self):
         return self.email

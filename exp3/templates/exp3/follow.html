@@ -60,17 +60,14 @@
 </nav>
 
 <!-- Page Header -->
-<header class="masthead" style="background-image: url('img/post-bg.jpg')">
+<header class="masthead" style="background-image: url('img/contact-bg.jpg')">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
-                <div class="post-heading">
-                    <h1>{{ diary.title }}</h1>
-                    <h2 class="subheading"></h2>
-                    <span class="meta">由
-                <a href="#">{{ diary.author.name }}</a>
-                于 {{diary.date|date:'Y 年 m 月 d 日'}} 编辑</span>
+                <div class="page-heading">
+                    <h1>{{ user.name }}</h1>
+                    <span class="subheading">关注</span>
                 </div>
             </div>
         </div>
@@ -81,17 +78,14 @@
 <article>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
-                {{ diary.content|linebreaks }}
-            </div>
+            {% for u in user.follow.all %}
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    {{ u.name }}
+                    <a href="{% url 'exp3:unfollow' user.id u.id %}" class="pull-right"><u><i><small>取消关注</small></i></u></a>
+                    <HR style="FILTER: alpha(opacity=100,finishopacity=0,style=3)" width="100%" color=#EFEFEF SIZE=3>
+                </div>
+            {% endfor %}
         </div>
-        {% ifequal user.id diary.author.id %}
-        <div class="form-group">
-            <div class="col-lg-8 col-md-10 mx-auto">
-                <a class="btn btn-primary" href="{% url 'exp3:editDiary' user.id diary.id %}">编辑</a>
-            </div>
-        </div>
-        {% endifequal %}
     </div>
 </article>
 

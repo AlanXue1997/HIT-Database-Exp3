@@ -40,6 +40,9 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'exp3:follow' user.id %}">关注</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{% url 'exp3:diaryList' user.id %}">日志</a>
                 </li>
                 <li class="nav-item">
@@ -64,7 +67,7 @@
             <div class="col-lg-8 col-md-10 mx-auto">
                 <div class="page-heading">
                     <h1>{{ user.name }}</h1>
-                    <span class="subheading">个人日志</span>
+                    <span class="subheading">日志</span>
                 </div>
             </div>
         </div>
@@ -75,7 +78,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-            {% for diary in user.diary_set.all %}
+            {% for diary in diarys %}
             <div class="post-preview">
                 <a href="{% url 'exp3:diary' user.id diary.id %}">
                     <h2 class="post-title">
@@ -127,6 +130,21 @@
                     </li>
                 </ul>
                 <p class="copyright text-muted">Copyright &copy; Your Website 2018</p>
+                <br>
+                {% if stat %}
+                <div class="panel panel-info">
+                    <div class="panel-heading">SQL 语句</div>
+                    <div class="panel-body">
+                        <div class="content">
+                            <pre>
+                                {% spaceless %}
+                                    {{ stat|linebreaks }}
+                                {% endspaceless %}
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

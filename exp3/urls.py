@@ -23,11 +23,15 @@ urlpatterns = [
     path('<int:user_id>/newWorkInfo/', views.newWorkInfo, name='newWorkInfo'),
 
     # Diary
-    path('<int:pk>/diaryList', views.DiarysListView.as_view(), name='diaryList'),
+    path('<int:user_id>/diaryList', views.diaryList, name='diaryList'),
     path('<int:pk>/newDiary', views.NewDiaryView.as_view(), name='newDiary'),
     path('<int:user_id>/newDiary/push', views.pushNewDiary, name='pushNewDiary'),
     path('<int:user_id>/diary/<int:diary_id>/', views.diarypage, name='diary'),
     path('<int:user_id>/editDiary/<int:diary_id>/', views.editDiary, name='editDiary'),
     path('<int:user_id>/editDiary/<int:diary_id>/push', views.pushEditDiary, name='pushEditDiary'),
     path('<int:user_id>/editDiary/<int:diary_id>/delete', views.deleteEditDiary, name='deleteEditDiary'),
+
+    # Follow
+    path('<int:pk>/follow', views.FollowView.as_view(), name='follow'),
+    path('<int:user_id>/follow/unfollow/<int:u_id>', views.unfollow, name='unfollow'),
 ]

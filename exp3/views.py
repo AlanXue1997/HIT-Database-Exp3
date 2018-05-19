@@ -8,7 +8,7 @@ from django import forms
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Count
 # from django.db import connection
 
 from .models import User, Education, Work, Diary
@@ -204,13 +204,27 @@ def pushNewDiary(request, user_id):
 # About diary
 # ------------------------------
 
-class FollowView(generic.DetailView):
-    model = User
-    template_name = "exp3/follow.html"
+def follow(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    users = user.follow.all().annotate(num_diary=Count('diary')).values('name','num_diary','id')
+    stat = sqlparse.format(str(users.query).replace('`', ''), reindent=True, keyword_case='upper')
+    return render(request, 'exp3/follow.html', {'user': user, 'users': users, 'stat': stat})
+
+def addFollow(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    ppp = user.follow.all()
+    users = User.objects.exclude(pk__in=ppp.values_list('pk', flat=True)).annotate(num_diary=Count('diary')).values('name','num_diary','id')
+    stat = sqlparse.format(str(users.query).replace('`', ''), reindent=True, keyword_case='upper')
+    return render(request, 'exp3/addFollow.html', {'user': user, 'users': users, 'stat': stat})
 
 def unfollow(request, user_id, u_id):
     user = get_object_or_404(User, pk=user_id)
     u = get_object_or_404(User, pk=u_id)
     user.follow.remove(u)
-    return render(request, 'exp3/follow.html', {'user' : user})
+    return HttpResponseRedirect(reverse('exp3:follow', args=(user_id,)))
 
+def doAddFollow(request, user_id, u_id):
+    user = get_object_or_404(User, pk=user_id)
+    u = get_object_or_404(User, pk=u_id)
+    user.follow.add(u)
+    return HttpResponseRedirect(reverse('exp3:follow', args=(user_id,)))

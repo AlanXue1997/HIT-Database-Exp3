@@ -32,6 +32,8 @@ urlpatterns = [
     path('<int:user_id>/editDiary/<int:diary_id>/delete', views.deleteEditDiary, name='deleteEditDiary'),
 
     # Follow
-    path('<int:pk>/follow', views.FollowView.as_view(), name='follow'),
+    path('<int:user_id>/follow', views.follow, name='follow'),
+    path('<int:user_id>/follow/add', views.addFollow, name='addFollow'),
     path('<int:user_id>/follow/unfollow/<int:u_id>', views.unfollow, name='unfollow'),
+    path('<int:user_id>/follow/add/<int:u_id>', views.doAddFollow, name='doAddFollow'),
 ]

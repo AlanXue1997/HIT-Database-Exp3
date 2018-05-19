@@ -82,13 +82,10 @@
                 <div class="col-lg-8 col-md-10 mx-auto">
                     {{ u.name }}
                     <u><i><small>已发表：{{ u.num_diary }}</small></i></u>
-                    <a href="{% url 'exp3:unfollow' user.id u.id %}" class="pull-right"><u><i><small>取消关注</small></i></u></a>
+                    <a href="{% url 'exp3:doAddFollow' user.id u.id %}" class="pull-right"><u><i><small>添加关注</small></i></u></a>
                     <HR style="FILTER: alpha(opacity=100,finishopacity=0,style=3)" width="100%" color=#EFEFEF SIZE=3>
                 </div>
             {% endfor %}
-            <div class="col-lg-8 col-md-10 mx-auto">
-                <a class="btn btn-primary " href="{% url 'exp3:addFollow' user.id %}">添加关注</a>
-            </div>
         </div>
     </div>
 </article>
